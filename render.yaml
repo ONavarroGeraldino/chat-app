@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: chat-app
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: VITE_SUPABASE_URL
+        value: https://eeqblwpqkkdtqaccsved.supabase.co
+      - key: VITE_SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlcWJsd3Bxa2tkdHFhY2NzdmVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3OTA2MjEsImV4cCI6MjA5NDM2NjYyMX0.lOp2pzIO1V-wA7lqK2wsyhniFv2IMhh6TcLHZGOhzV4
