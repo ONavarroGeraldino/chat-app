@@ -7,6 +7,11 @@ import ScrollToBottom from 'react-scroll-to-bottom'
 
 const STORAGE_KEY = 'chat_user'
 
+function logout(setUser) {
+  localStorage.removeItem(STORAGE_KEY)
+  setUser(null)
+}
+
 const EMOJIS = [
   '😀','😃','😄','😁','😅','😂','🤣','😊','😇','🙂','😉','😌','😍','🥰','😘','😗',
   '😋','😛','😜','🤪','😝','🤑','🤗','🤭','🫣','🤫','🤔','😐','😑','😶','😏','😒',
