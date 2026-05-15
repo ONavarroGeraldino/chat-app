@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { io } from 'socket.io-client'
-import { useQueryClient, useQuery } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, LogOut, Smile } from 'lucide-react'
 import ScrollToBottom from 'react-scroll-to-bottom'
@@ -29,41 +28,50 @@ const EMOJIS = [
 ]
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || (import.meta.env.PROD ? '' : 'http://localhost:3001')
+const MESSAGES_CACHE_KEY = 'chat_messages'
+
+let cachedMessages = []
+try {
+  const stored = localStorage.getItem(MESSAGES_CACHE_KEY)
+  if (stored) cachedMessages = JSON.parse(stored)
+} catch {}
+
+let globalSetConnected = null
+let globalSetMessages = null
 
 const socket = io(SOCKET_URL, { autoConnect: true })
+
+socket.on('connect', () => globalSetConnected?.(true))
+socket.on('disconnect', () => globalSetConnected?.(false))
+socket.on('chat_messages', (msgs) => {
+  localStorage.setItem(MESSAGES_CACHE_KEY, JSON.stringify(msgs))
+  globalSetMessages?.(msgs)
+})
+socket.on('chat_message', (newMsg) => {
+  globalSetMessages?.((prev) => {
+    const next = [...prev, newMsg]
+    localStorage.setItem(MESSAGES_CACHE_KEY, JSON.stringify(next))
+    return next
+  })
+})
 
 export default function Chat({ user, setUser }) {
   const username = user?.name || 'Anónimo'
   const [input, setInput] = useState('')
   const [connected, setConnected] = useState(socket.connected)
   const [showEmojis, setShowEmojis] = useState(false)
-  const queryClient = useQueryClient()
+  const [messages, setMessages] = useState(cachedMessages)
   const emojiRef = useRef(null)
   const inputRef = useRef(null)
 
-  const { data: messages = [] } = useQuery({
-    queryKey: ['messages'],
-    queryFn: () => [],
-    staleTime: Infinity,
-  })
-
   useEffect(() => {
-    socket.on('connect', () => setConnected(true))
-    socket.on('disconnect', () => setConnected(false))
-    socket.on('chat_messages', (msgs) => {
-      queryClient.setQueryData(['messages'], msgs)
-    })
-    socket.on('chat_message', (newMsg) => {
-      queryClient.setQueryData(['messages'], (prev = []) => [...prev, newMsg])
-    })
-
+    globalSetConnected = setConnected
+    globalSetMessages = setMessages
     return () => {
-      socket.off('connect')
-      socket.off('disconnect')
-      socket.off('chat_messages')
-      socket.off('chat_message')
+      globalSetConnected = null
+      globalSetMessages = null
     }
-  }, [queryClient])
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (e) => {
