@@ -4,13 +4,16 @@ import { readFileSync, existsSync } from 'fs'
 import { resolve, extname } from 'path'
 import { Server } from 'socket.io'
 import { createClient } from '@supabase/supabase-js'
+import WebSocket from 'ws'
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL
 const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
 
 let supabase = null
 if (supabaseUrl && supabaseAnonKey) {
-  supabase = createClient(supabaseUrl, supabaseAnonKey)
+  supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    realtime: { transport: WebSocket },
+  })
   console.log('Supabase conectado')
 } else {
   console.log('Modo sin persistencia — define VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY')
