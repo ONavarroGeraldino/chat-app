@@ -131,7 +131,7 @@ export default function Chat({ user, setUser }) {
         </div>
       </header>
 
-      <ScrollToBottom className="flex-1 overflow-y-auto px-4 py-4 space-y-5 scrollbar-thin scrollbar-thumb-white/10">
+      <ScrollToBottom className="flex-1 overflow-y-auto px-4 py-4 space-y-7 scrollbar-thin scrollbar-thumb-white/10">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => {
             const isMine = msg.user === username
