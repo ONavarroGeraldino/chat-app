@@ -152,7 +152,7 @@ export default function Chat({ user, setUser }) {
                     <span className="text-[11px] text-white/50 font-medium mb-1 ml-1">{msg.user}</span>
                   )}
                   <div
-                    className={`rounded-2xl px-5 py-3.5 text-sm shadow-lg ${
+                    className={`rounded-2xl px-10 py-5.5 text-sm shadow-lg ${
                       isMine
                         ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-br-md'
                         : 'bg-white/10 backdrop-blur-md text-white/90 rounded-bl-md'
