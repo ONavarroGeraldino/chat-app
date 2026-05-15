@@ -1,27 +1,34 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { MessageCircle } from 'lucide-react'
 
-const STORAGE_KEY = 'chat_user'
+const COLORS = ['bg-blue-500', 'bg-emerald-500', 'bg-violet-500', 'bg-rose-500', 'bg-amber-500', 'bg-cyan-500']
 
 export default function Auth({ onLogin }) {
   const [nombre, setNombre] = useState('')
+  const color = COLORS[Math.floor(Math.random() * COLORS.length)]
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!nombre.trim()) return
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ name: nombre.trim() }))
+    localStorage.setItem('chat_user', JSON.stringify({ name: nombre.trim() }))
     onLogin({ name: nombre.trim() })
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
-        <div className="flex flex-col items-center mb-6">
-          <div className="bg-blue-600 text-white rounded-full p-3 mb-3">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-8 w-full max-w-sm border border-white/10"
+      >
+        <div className="flex flex-col items-center mb-8">
+          <div className={`${color} text-white rounded-full p-3.5 mb-4 shadow-lg`}>
             <MessageCircle size={28} />
           </div>
-          <h1 className="text-xl font-bold text-gray-800">Chat en vivo</h1>
-          <p className="text-sm text-gray-500 mt-1">Escribe tu nombre para entrar</p>
+          <h1 className="text-2xl font-bold text-white">Chat en vivo</h1>
+          <p className="text-sm text-white/50 mt-1.5">Escribe tu nombre para entrar</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -31,17 +38,17 @@ export default function Auth({ onLogin }) {
             onChange={(e) => setNombre(e.target.value)}
             placeholder="Tu nombre"
             required
-            className="border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
           />
 
           <button
             type="submit"
-            className="bg-blue-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-blue-700 transition-colors"
+            className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl py-3 text-sm font-semibold hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg shadow-blue-500/25"
           >
             Entrar al chat
           </button>
         </form>
-      </div>
+      </motion.div>
     </div>
   )
 }
