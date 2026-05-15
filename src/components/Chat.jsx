@@ -148,9 +148,7 @@ export default function Chat({ user, setUser }) {
                   {msg.user[0].toUpperCase()}
                 </div>
                 <div className={`max-w-[70%] ${isMine ? 'items-end' : 'items-start'} flex flex-col`}>
-                  {!isMine && (
-                    <span className="text-[11px] text-white/50 font-medium mb-1 ml-1">{msg.user}</span>
-                  )}
+                    <span className={`text-[11px] font-medium mb-1 ml-1 ${isMine ? 'text-blue-300' : 'text-white/50'}`}>{msg.user}</span>
                   <div
                     className={`rounded-2xl px-10 py-5.5 text-sm shadow-lg ${
                       isMine
